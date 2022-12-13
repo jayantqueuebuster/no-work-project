@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Focus Work</string>
+    <string name="focus_work">Focus Work</string>
+    <string name="add_task">Add Task</string>
+    <string name="enter_title">Enter title..</string>
+    <string name="write_task">Write task here …</string>
+    <string name="timer_screen">Timer Screen</string>
+    <string name="enter_min">Enter Minutes</string>
+    <string name="set">Set</string>
+    <string name="start">Start</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="update_task">Update Task</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="could_not_update_task">Could not update task on the database</string>
+    <string name="task_completed">Task Completed!!</string>
+</resources>
