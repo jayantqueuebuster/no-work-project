@@ -10,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.locosub.focuswork.data.models.Task
 import com.locosub.focuswork.features.domain.ui.screen.details.AddTaskScreen
 import com.locosub.focus_work.features.domain.ui.screen.details.UpdateTaskScreen
-import com.locosub.focus_work.features.navigation.NavigationItems
+import com.locosub.focuswork.features.navigation.NavigationItems
 import com.locosub.focuswork.ui.theme.FocusWorkTheme
 import com.locosub.focuswork.utils.ADDTASK
 import dagger.hilt.android.AndroidEntryPoint

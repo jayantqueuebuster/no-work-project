@@ -18,7 +18,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.locosub.focus_work.common.noRippleEffect
-import com.locosub.focus_work.features.navigation.BottomBarScreen
 import com.locosub.focuswork.ui.theme.LightGrey
 import com.locosub.focuswork.ui.theme.Navy
 import com.locosub.focuswork.ui.theme.Orange

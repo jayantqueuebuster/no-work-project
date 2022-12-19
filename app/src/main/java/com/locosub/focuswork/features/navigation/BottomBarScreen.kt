@@ -1,4 +1,4 @@
-package com.locosub.focus_work.features.navigation
+package com.locosub.focuswork.features.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
@@ -29,7 +29,7 @@ sealed class BottomBarScreen(
 
     object Report : BottomBarScreen(
         route = "report",
-        title = "Reports",
+        title = "Reflection",
         icon = Icons.Rounded.Note,
         icon_focused = Icons.Rounded.Note
     )

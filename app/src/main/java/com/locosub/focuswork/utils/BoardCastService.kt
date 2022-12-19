@@ -30,14 +30,13 @@ class BlockNotification : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val notificationCode = matchNotificationCode(sbn)
-        clearNotofication(notificationCode)
         cancelAllNotifications()
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         val notificationCode = matchNotificationCode(sbn)
-        clearNotofication(notificationCode)
         cancelAllNotifications()
+
     }
 
     private fun matchNotificationCode(sbn: StatusBarNotification): Int {

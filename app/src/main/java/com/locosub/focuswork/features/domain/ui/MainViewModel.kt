@@ -44,6 +44,7 @@ class MainViewModel @Inject constructor(
         _taskData.value = data
     }
 
+
     init {
         viewModelScope.launch {
             repository.getTask()
@@ -134,6 +135,9 @@ class MainViewModel @Inject constructor(
 
 
     fun getBooleanPref(key: Preferences.Key<Boolean>) = preferenceStore.getBooleanPref(key)
+    fun setBooleanPref(key: Preferences.Key<Boolean>, value: Boolean) = viewModelScope.launch {
+        preferenceStore.setBooleanPref(key, value)
+    }
 
 }
 

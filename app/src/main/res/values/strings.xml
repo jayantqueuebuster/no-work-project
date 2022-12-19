@@ -14,4 +14,6 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="could_not_update_task">Could not update task on the database</string>
     <string name="task_completed">Task Completed!!</string>
+    <string name="service_name">Block Notification</string>
+    <string name="Reset">Reset</string>
 </resources>

@@ -213,7 +213,17 @@ fun TaskEachRow(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onKeyUpdate(data.key) }
+                .clickable { onKeyUpdate(data.key)
+                    viewModel.setTaskData(
+                        Task.TaskResponse(
+                            Task(
+                                data.task?.title ?: "-",
+                                data.task?.description ?: "-"
+                            ),
+                            data.key
+                        )
+                    )
+                }
                 .background(Color.White)
         ) {
             Row(

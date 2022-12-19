@@ -23,6 +23,7 @@ class PreferenceStore @Inject constructor(
         val startButtonEnabled = booleanPreferencesKey("startButtonEnabled")
         val timer = stringPreferencesKey("timer")
         val endTime = stringPreferencesKey("endTime")
+        val isRunning = booleanPreferencesKey("isRunning")
     }
 
     suspend fun setBooleanPref(key: Preferences.Key<Boolean>, value: Boolean) = context
@@ -71,7 +72,7 @@ class PreferenceStore @Inject constructor(
                 emit(emptyPreferences())
             }
         }.map { preference ->
-            val data = preference[key] ?: true
+            val data = preference[key] ?: false
             data
         }
 
