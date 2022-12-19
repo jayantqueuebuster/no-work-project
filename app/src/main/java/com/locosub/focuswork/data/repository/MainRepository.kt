@@ -1,4 +1,4 @@
-package com.locosub.focus_work.data.repository
+package com.locosub.focuswork.data.repository
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

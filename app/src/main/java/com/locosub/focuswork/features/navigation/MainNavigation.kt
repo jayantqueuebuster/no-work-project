@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.locosub.focuswork.features.domain.ui.MainViewModel
-import com.locosub.focus_work.features.domain.ui.screen.HomeScreen
+import com.locosub.focuswork.features.domain.ui.screen.HomeScreen
 import com.locosub.focus_work.features.domain.ui.screen.InfoScreen
 import com.locosub.focus_work.features.domain.ui.screen.ReportScreen
 import com.locosub.focus_work.features.domain.ui.screen.TimerScreen
@@ -27,7 +27,7 @@ fun MainNavigation(
     val viewModel: MainViewModel = viewModel()
     NavHost(navController = navHostController, startDestination = BottomBarScreen.Home.route) {
         composable(BottomBarScreen.Home.route) {
-            HomeScreen(viewModel)
+            HomeScreen(viewModel,navHostController)
         }
         composable(BottomBarScreen.Timer.route) {
             TimerScreen(viewModel,navHostController,stopwatchService)

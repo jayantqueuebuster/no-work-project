@@ -39,7 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.locosub.focus_work.common.*
-import com.locosub.focus_work.data.repository.PreferenceStore
+import com.locosub.focuswork.data.repository.PreferenceStore
 import com.locosub.focuswork.R
 import com.locosub.focuswork.data.models.Task
 import com.locosub.focuswork.features.domain.ui.MainViewModel
@@ -162,13 +162,17 @@ fun TimerScreen(
                             modifier = Modifier.padding(20.dp)
                         ) {
                             Text(
-                                text = data.task?.title ?: "-", style = TextStyle(
+                                text = runBlocking {
+                                    viewModel.getStringPref(PreferenceStore.title).first()
+                                }, style = TextStyle(
                                     color = DarkBlue, fontSize = 20.sp, fontWeight = FontWeight.W400
                                 )
                             )
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(
-                                text = data.task?.description ?: "-", style = TextStyle(
+                                text = runBlocking {
+                                    viewModel.getStringPref(PreferenceStore.des).first()
+                                }, style = TextStyle(
                                     color = Color.Gray,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal
@@ -243,6 +247,7 @@ fun TimerScreen(
                             if (!isNotificationServiceEnabled(context)) {
                                 context.startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
                             } else {
+                                viewModel.setBooleanPref(PreferenceStore.isRunning, true)
                                 ServiceHelper.triggerForegroundService(
                                     context = context,
                                     action = if (currentState == StopwatchState.Started) ACTION_SERVICE_STOP
@@ -266,6 +271,7 @@ fun TimerScreen(
                             .weight(1f)
                             .fillMaxHeight(0.8f),
                         onClick = {
+                            viewModel.setBooleanPref(PreferenceStore.isRunning, false)
                             context.startActivity(Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS))
                             ServiceHelper.triggerForegroundService(
                                 context = context, action = ACTION_SERVICE_CANCEL
@@ -292,86 +298,6 @@ fun addAnimation(duration: Int = 600): ContentTransform {
     ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeOut(
         animationSpec = tween(durationMillis = duration)
     )
-}
-
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-@Composable
-fun CountDownTimerScreen(
-    totalTime: String,
-    startTimer: Boolean,
-    viewModel: MainViewModel,
-    onTimeUpdate: (String) -> Unit,
-    onButtonEnable: (Boolean) -> Unit
-) {
-    var endTime: Long by remember { mutableStateOf(0) }
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    var latestLifecycleEvent by remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
-    viewModel.setBooleanPref(PreferenceStore.isRunning, true)
-    DisposableEffect(lifecycle) {
-        val observer = LifecycleEventObserver { _, event ->
-            latestLifecycleEvent = event
-        }
-        lifecycle.addObserver(observer)
-        onDispose {
-            lifecycle.removeObserver(observer)
-        }
-    }
-
-    var currentTime: Long by if (totalTime.isNotEmpty()) {
-        remember {
-            mutableStateOf(
-                300000
-                //  totalTime.toLong() * 60000
-            )
-        }
-    } else {
-        remember { mutableStateOf(0) }
-    }
-    endTime = System.currentTimeMillis() + currentTime
-
-    val minutes = (currentTime / 1000).toInt() / 60
-    val seconds = (currentTime / 1000).toInt() % 60
-
-
-    val res = java.lang.String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-    if (startTimer)
-        LaunchedEffect(key1 = currentTime) {
-            if (currentTime > 0) {
-                delay(100L)
-                currentTime -= 100L
-            } else {
-                onButtonEnable(true)
-                onTimeUpdate("")
-            }
-        }
-
-    Text(
-        text = res, fontSize = 44.sp, fontWeight = FontWeight.Bold, color = Color.Black
-    )
-
-    if (latestLifecycleEvent == Lifecycle.Event.ON_STOP) {
-        viewModel.setStringPref(
-            PreferenceStore.timer,
-            currentTime.toString()
-        )
-        viewModel.setBooleanPref(PreferenceStore.isRunning, false)
-        viewModel.setStringPref(PreferenceStore.endTime, endTime.toString())
-    }
-    if (latestLifecycleEvent == Lifecycle.Event.ON_START) {
-        Log.d("main", "onStart: working ")
-        endTime = runBlocking {
-            viewModel.getStringPref(PreferenceStore.endTime).first()
-        }.toLong()
-        currentTime = runBlocking {
-            viewModel.getStringPref(PreferenceStore.timer).first()
-        }.toLong()
-        currentTime = endTime - System.currentTimeMillis()
-        if (currentTime > 0) {
-            currentTime = 0
-        }
-
-    }
-
 }
 
 

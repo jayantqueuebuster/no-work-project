@@ -1,4 +1,4 @@
-package com.locosub.focus_work.data.repository
+package com.locosub.focuswork.data.repository
 
 
 import android.content.Context
@@ -24,6 +24,8 @@ class PreferenceStore @Inject constructor(
         val timer = stringPreferencesKey("timer")
         val endTime = stringPreferencesKey("endTime")
         val isRunning = booleanPreferencesKey("isRunning")
+        val title = stringPreferencesKey("title")
+        val des = stringPreferencesKey("des")
     }
 
     suspend fun setBooleanPref(key: Preferences.Key<Boolean>, value: Boolean) = context

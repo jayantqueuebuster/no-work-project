@@ -6,8 +6,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -52,7 +51,8 @@ fun CommonTextField(
     onTextChange: (String) -> Unit
 ) {
 
-    TextField(value = text, onValueChange = { onTextChange(it) },
+    TextField(
+        value = text, onValueChange = { onTextChange(it) },
         placeholder = {
             Text(
                 text = label,
@@ -138,6 +138,32 @@ fun LoadingDialog() {
 
     Dialog(onDismissRequest = {}) {
         CircularProgressIndicator()
+    }
+
+}
+
+@Composable
+fun TimerRunningText(
+    onClick: () -> Unit = {}
+) {
+
+    Dialog(onDismissRequest = { }) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Task is already schedule", style = TextStyle(
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(onClick = { onClick() }) {
+                Text(text = "Go to your task")
+            }
+        }
     }
 
 }

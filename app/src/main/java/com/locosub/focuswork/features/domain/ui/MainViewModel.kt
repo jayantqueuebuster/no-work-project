@@ -10,8 +10,8 @@ import com.locosub.focus_work.common.doOnFailure
 import com.locosub.focus_work.common.doOnLoading
 import com.locosub.focus_work.common.doOnSuccess
 import com.locosub.focuswork.data.models.Task
-import com.locosub.focus_work.data.repository.MainRepository
-import com.locosub.focus_work.data.repository.PreferenceStore
+import com.locosub.focuswork.data.repository.MainRepository
+import com.locosub.focuswork.data.repository.PreferenceStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

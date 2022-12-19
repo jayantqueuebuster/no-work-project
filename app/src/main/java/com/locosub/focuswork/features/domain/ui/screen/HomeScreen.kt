@@ -1,4 +1,4 @@
-package com.locosub.focus_work.features.domain.ui.screen
+package com.locosub.focuswork.features.domain.ui.screen
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -30,15 +30,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.navigation.NavHostController
 
 import com.locosub.focus_work.common.LoadingDialog
+import com.locosub.focus_work.common.TimerRunningText
 import com.locosub.focus_work.common.getActivity
 import com.locosub.focuswork.R
 import com.locosub.focuswork.data.models.Task
+import com.locosub.focuswork.data.repository.PreferenceStore
 import com.locosub.focuswork.features.domain.ui.AddTaskActivity
 import com.locosub.focuswork.features.domain.ui.MainViewModel
 import com.locosub.focuswork.features.domain.ui.TaskEvents
 import com.locosub.focuswork.features.domain.ui.TaskUiEvent
+import com.locosub.focuswork.features.navigation.BottomBarScreen
 import com.locosub.focuswork.ui.theme.DarkBlue
 import com.locosub.focuswork.ui.theme.LightGrey
 import com.locosub.focuswork.ui.theme.Navy
@@ -46,37 +50,40 @@ import com.locosub.focuswork.utils.ADDTASK
 import com.locosub.focuswork.utils.UPDATE_TASK
 import com.locosub.focuswork.utils.showToast
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    navHostController: NavHostController
 ) {
 
     val context = LocalContext.current.getActivity()!!
     val res = viewModel.taskResponse.value
     var isLoading by remember { mutableStateOf(false) }
     var key by rememberSaveable { mutableStateOf("") }
-    if (res.data.isNotEmpty())
+    if (res.data.isNotEmpty()) {
         key = res.data[0].key
 
-    LaunchedEffect(key1 = res) {
-        if (res.data.isNotEmpty()) {
-            res.data.forEach {
-                // if (!it.task?.completed!!) {
-                viewModel.setTaskData(
-                    Task.TaskResponse(
-                        Task(
-                            it.task?.title ?: "-",
-                            it.task?.description ?: "-"
-                        ),
-                        it.key
-                    )
-                )
-                //  return@LaunchedEffect
-                //   }
-            }
+    }
+    var isTaskRunning by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = true) {
+        if (res.data.isNotEmpty() && !viewModel.getBooleanPref(PreferenceStore.isRunning).first()) {
+            viewModel.setStringPref(PreferenceStore.title, res.data[0].task?.title ?: "-")
+            viewModel.setStringPref(PreferenceStore.des, res.data[0].task?.description ?: "-")
         }
+        if (viewModel.getBooleanPref(PreferenceStore.isRunning).first()) {
+            isTaskRunning = true
+        }
+    }
+    if (isTaskRunning) {
+        TimerRunningText {
+            navHostController.navigate(BottomBarScreen.Timer.route)
+            isTaskRunning = false
+        }
+
     }
 
 
@@ -149,7 +156,6 @@ fun HomeScreen(
                             it.key
                         }
                     ) { data ->
-                        //if (!data.task?.completed!!)
                         TaskEachRow(
                             data,
                             onEdit = {
@@ -213,7 +219,8 @@ fun TaskEachRow(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onKeyUpdate(data.key)
+                .clickable {
+                    onKeyUpdate(data.key)
                     viewModel.setTaskData(
                         Task.TaskResponse(
                             Task(
@@ -223,6 +230,8 @@ fun TaskEachRow(
                             data.key
                         )
                     )
+                    viewModel.setStringPref(PreferenceStore.title, data.task?.title ?: "-")
+                    viewModel.setStringPref(PreferenceStore.des, data.task?.description ?: "-")
                 }
                 .background(Color.White)
         ) {
@@ -245,6 +254,8 @@ fun TaskEachRow(
                                 data.key
                             )
                         )
+                        viewModel.setStringPref(PreferenceStore.title, data.task?.title ?: "-")
+                        viewModel.setStringPref(PreferenceStore.des, data.task?.description ?: "-")
                     })
                     Column {
                         Text(
