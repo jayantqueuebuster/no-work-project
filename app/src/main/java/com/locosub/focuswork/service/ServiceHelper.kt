@@ -7,7 +7,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.locosub.focuswork.MainActivity
+import com.locosub.focuswork.data.repository.PreferenceStore
 import com.locosub.focuswork.utils.*
+import kotlinx.coroutines.runBlocking
 
 @ExperimentalAnimationApi
 object ServiceHelper {
@@ -41,15 +43,17 @@ object ServiceHelper {
         val resumeIntent = Intent(context, StopwatchService::class.java).apply {
             putExtra(STOPWATCH_STATE, StopwatchState.Started.name)
         }
+
         return PendingIntent.getService(
             context, RESUME_REQUEST_CODE, resumeIntent, flag
         )
     }
 
-    fun cancelPendingIntent(context: Context): PendingIntent {
+    fun cancelPendingIntent(context: Context, preferenceStore: PreferenceStore): PendingIntent {
         val cancelIntent = Intent(context, StopwatchService::class.java).apply {
             putExtra(STOPWATCH_STATE, StopwatchState.Canceled.name)
         }
+        runBlocking { preferenceStore.setBooleanPref(PreferenceStore.isRunning, false) }
         return PendingIntent.getService(
             context, CANCEL_REQUEST_CODE, cancelIntent, flag
         )
