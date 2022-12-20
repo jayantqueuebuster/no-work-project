@@ -41,7 +41,7 @@ class ReceiverApplock : BroadcastReceiver() {
                 val i = Intent(context, ScreenBlockerActivity::class.java)
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 i.putExtra("broadcast_receiver", "broadcast_receiver")
-                context.startActivity(i)
+               // context.startActivity(i)
             }
             //  }
             //  }
@@ -54,7 +54,7 @@ class ReceiverApplock : BroadcastReceiver() {
                 val i = Intent(context, ScreenBlockerActivity::class.java)
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 i.putExtra("broadcast_receiver", "broadcast_receiver")
-                context.startActivity(i)
+               // context.startActivity(i)
             }
         }
     }

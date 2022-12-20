@@ -1,9 +1,13 @@
 package com.locosub.focuswork.service
 
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.provider.Settings
+import android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
+import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import com.locosub.focuswork.MainActivity
@@ -49,7 +53,9 @@ object ServiceHelper {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     fun cancelPendingIntent(context: Context, preferenceStore: PreferenceStore): PendingIntent {
+
         val cancelIntent = Intent(context, StopwatchService::class.java).apply {
             putExtra(STOPWATCH_STATE, StopwatchState.Canceled.name)
         }
@@ -65,4 +71,5 @@ object ServiceHelper {
             context.startService(this)
         }
     }
+
 }
