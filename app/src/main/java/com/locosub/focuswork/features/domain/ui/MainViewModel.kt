@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.locosub.focus_work.common.doOnFailure
 import com.locosub.focus_work.common.doOnLoading
 import com.locosub.focus_work.common.doOnSuccess
+import com.locosub.focuswork.data.models.Questions
 import com.locosub.focuswork.data.models.Task
 import com.locosub.focuswork.data.repository.MainRepository
 import com.locosub.focuswork.data.repository.PreferenceStore
@@ -28,6 +29,10 @@ class MainViewModel @Inject constructor(
     private val _tasksResponse: MutableState<TaskStates> = mutableStateOf(TaskStates())
     val taskResponse: State<TaskStates> = _tasksResponse
 
+    private val _questionsResponse: MutableState<QuestionsStates> =
+        mutableStateOf(QuestionsStates())
+    val questionsResponse: State<QuestionsStates> = _questionsResponse
+
     private val _addTaskEventFlow = MutableSharedFlow<TaskUiEvent<String>>()
     val addTaskEventFlow = _addTaskEventFlow.asSharedFlow()
 
@@ -36,6 +41,9 @@ class MainViewModel @Inject constructor(
 
     private val _addTaskUpdateEventFlow = MutableSharedFlow<TaskUiEvent<String>>()
     val addTaskUpdateEventFlow = _addTaskUpdateEventFlow.asSharedFlow()
+
+    private val _deleteQuestionEventFlow = MutableSharedFlow<TaskUiEvent<String>>()
+    val deleteQuestionEventFlow = _deleteQuestionEventFlow.asSharedFlow()
 
     private val _taskData: MutableState<Task.TaskResponse> = mutableStateOf(Task.TaskResponse())
     val taskData: State<Task.TaskResponse> = _taskData
@@ -60,6 +68,25 @@ class MainViewModel @Inject constructor(
                 }
                 .doOnLoading {
                     _tasksResponse.value = TaskStates(
+                        isLoading = true
+                    )
+                }
+                .collect()
+        }
+        viewModelScope.launch {
+            repository.getQuestions()
+                .doOnSuccess {
+                    _questionsResponse.value = QuestionsStates(
+                        data = it
+                    )
+                }
+                .doOnFailure {
+                    _questionsResponse.value = QuestionsStates(
+                        msg = it?.message ?: "something went wrong"
+                    )
+                }
+                .doOnLoading {
+                    _questionsResponse.value = QuestionsStates(
                         isLoading = true
                     )
                 }
@@ -114,6 +141,25 @@ class MainViewModel @Inject constructor(
                         .collect()
                 }
             }
+            is TaskEvents.DeleteQuestion -> {
+                viewModelScope.launch {
+                    repository.deleteQuestions(taskEvents.key)
+                        .doOnSuccess {
+                            _deleteQuestionEventFlow.emit(TaskUiEvent.Success(it))
+                        }
+                        .doOnFailure {
+                            _deleteQuestionEventFlow.emit(
+                                TaskUiEvent.Failure(
+                                    it ?: Throwable("Something went wrong")
+                                )
+                            )
+                        }
+                        .doOnLoading {
+                            _deleteQuestionEventFlow.emit(TaskUiEvent.Loading)
+                        }
+                        .collect()
+                }
+            }
         }
     }
 
@@ -153,10 +199,17 @@ sealed class TaskEvents {
     data class AddTask(val data: Task) : TaskEvents()
     data class UpdateTask(val data: Task.TaskResponse) : TaskEvents()
     data class DeleteTask(val key: String) : TaskEvents()
+    data class DeleteQuestion(val key: String) : TaskEvents()
 }
 
 data class TaskStates(
     val data: List<Task.TaskResponse> = emptyList(),
+    val msg: String = "",
+    val isLoading: Boolean = false
+)
+
+data class QuestionsStates(
+    val data: List<List<Questions.QuestionResponse>> = emptyList(),
     val msg: String = "",
     val isLoading: Boolean = false
 )

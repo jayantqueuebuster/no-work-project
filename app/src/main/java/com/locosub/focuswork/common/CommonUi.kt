@@ -121,7 +121,7 @@ fun CommonButton(
             backgroundColor = background
         )
     ) {
-        Text(text = title)
+        Text(text = title, color = Color.White)
     }
 
 }

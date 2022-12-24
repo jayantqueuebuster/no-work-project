@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import com.locosub.focuswork.features.domain.ui.MainViewModel
 import com.locosub.focuswork.features.domain.ui.screen.HomeScreen
 import com.locosub.focus_work.features.domain.ui.screen.InfoScreen
-import com.locosub.focus_work.features.domain.ui.screen.RegressionScreen
+import com.locosub.focuswork.features.domain.ui.screen.RegressionScreen
 import com.locosub.focus_work.features.domain.ui.screen.TimerScreen
 import com.locosub.focuswork.service.StopwatchService
 
