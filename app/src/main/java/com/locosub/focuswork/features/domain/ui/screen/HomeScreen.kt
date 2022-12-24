@@ -271,7 +271,7 @@ fun TaskEachRow(
                             text = data.task?.description ?: "-",
                             style = TextStyle(
                                 color = Color.Gray,
-                                fontSize = 16.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Normal
                             )
                         )
